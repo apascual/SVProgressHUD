@@ -12,6 +12,7 @@
 #import "SVProgressHUD.h"
 #import "SVIndefiniteAnimatedView.h"
 #import "SVRadialGradientLayer.h"
+#import "SCSkypeActivityIndicatorView.h"
 
 NSString * const SVProgressHUDDidReceiveTouchEventNotification = @"SVProgressHUDDidReceiveTouchEventNotification";
 NSString * const SVProgressHUDDidTouchDownInsideNotification = @"SVProgressHUDDidTouchDownInsideNotification";
@@ -454,7 +455,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
 	if(string) {
         if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeFlat) {
             SVIndefiniteAnimatedView *indefiniteAnimationView = (SVIndefiniteAnimatedView *)self.indefiniteAnimatedView;
-            indefiniteAnimationView.radius = SVProgressHUDRingRadius;
+//            indefiniteAnimationView.radius = SVProgressHUDRingRadius;
             [indefiniteAnimationView sizeToFit];
         }
         
@@ -467,7 +468,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
 	} else {
         if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeFlat) {
             SVIndefiniteAnimatedView *indefiniteAnimationView = (SVIndefiniteAnimatedView *)self.indefiniteAnimatedView;
-            indefiniteAnimationView.radius = SVProgressHUDRingNoTextRadius;
+//            indefiniteAnimationView.radius = SVProgressHUDRingNoTextRadius;
             [indefiniteAnimationView sizeToFit];
         }
         
@@ -995,12 +996,19 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
 }
 
 - (SVIndefiniteAnimatedView *)createIndefiniteAnimatedView{
-    SVIndefiniteAnimatedView *indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
-    indefiniteAnimatedView.strokeColor = self.foregroundColorForStyle;
-    indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
-    indefiniteAnimatedView.strokeThickness = SVProgressHUDRingThickness;
-    [indefiniteAnimatedView sizeToFit];
-    return indefiniteAnimatedView;
+    SCSkypeActivityIndicatorView *skypeSpinner = [[SCSkypeActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [skypeSpinner setNumberOfBubbles:5];
+    [skypeSpinner setAnimationDuration:1.5f];
+    [skypeSpinner setBubbleSize:CGSizeMake(15.0f, 15.0f)];
+    [skypeSpinner setBubbleColor:self.foregroundColor];
+
+    return skypeSpinner;
+//    SVIndefiniteAnimatedView *indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
+//    indefiniteAnimatedView.strokeColor = self.foregroundColorForStyle;
+//    indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
+//    indefiniteAnimatedView.strokeThickness = SVProgressHUDRingThickness;
+//    [indefiniteAnimatedView sizeToFit];
+//    return indefiniteAnimatedView;
 }
 
 - (UIView *)indefiniteAnimatedView{
