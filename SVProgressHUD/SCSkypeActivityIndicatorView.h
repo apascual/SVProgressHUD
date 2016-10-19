@@ -11,6 +11,7 @@
 @property (nonatomic, assign) NSUInteger numberOfBubbles;
 
 @property (nonatomic, strong) UIColor *bubbleColor;
+@property (nonatomic, strong) UIColor *bubbleBorderColor;
 
 @property (nonatomic, assign) CGSize bubbleSize;
 

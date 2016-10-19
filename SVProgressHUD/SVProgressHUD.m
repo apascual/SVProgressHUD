@@ -31,6 +31,7 @@ static CGFloat SVProgressHUDCornerRadius;
 static CGFloat SVProgressHUDRingThickness;
 static UIFont *SVProgressHUDFont;
 static UIColor *SVProgressHUDForegroundColor;
+static UIColor *SVProgressHUDBorderColor;
 static UIColor *SVProgressHUDBackgroundColor;
 static UIImage *SVProgressHUDInfoImage;
 static UIImage *SVProgressHUDSuccessImage;
@@ -159,6 +160,11 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
 + (void)setForegroundColor:(UIColor*)color{
     [self sharedView];
     SVProgressHUDForegroundColor = color;
+}
+
++ (void)setBorderColor:(UIColor*)color{
+    [self sharedView];
+    SVProgressHUDBorderColor = color;
 }
 
 + (void)setBackgroundColor:(UIColor*)color{
@@ -347,7 +353,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
         SVProgressHUDDefaultStyle = SVProgressHUDStyleLight;
         SVProgressHUDDefaultMaskType = SVProgressHUDMaskTypeNone;
         SVProgressHUDDefaultAnimationType = SVProgressHUDAnimationTypeFlat;
-
+        
         SVProgressHUDRingThickness = 2;
         SVProgressHUDCornerRadius = 14;
         SVProgressHUDForegroundColor = [UIColor blackColor];
@@ -366,7 +372,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
         UIImage* infoImage = [UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"info" ofType:@"png"]];
         UIImage* successImage = [UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"success" ofType:@"png"]];
         UIImage* errorImage = [UIImage imageWithContentsOfFile:[imageBundle pathForResource:@"error" ofType:@"png"]];
-
+        
         if([[UIImage class] instancesRespondToSelector:@selector(imageWithRenderingMode:)]){
             SVProgressHUDInfoImage = [infoImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             SVProgressHUDSuccessImage = [successImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -377,7 +383,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
             SVProgressHUDErrorImage = errorImage;
         }
     }
-	
+    
     return self;
 }
 
@@ -414,7 +420,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
             }
             stringRect = CGRectMake(0.0f, 0.0f, stringSize.width, stringSize.height);
         }
-
+        
         CGFloat stringWidth = stringRect.size.width;
         CGFloat stringHeight = ceilf(CGRectGetHeight(stringRect));
         
@@ -444,18 +450,18 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     } else{
        	self.imageView.center = CGPointMake(CGRectGetWidth(self.hudView.bounds)/2, CGRectGetHeight(self.hudView.bounds)/2);
     }
-
-	self.stringLabel.hidden = NO;
-	self.stringLabel.frame = labelRect;
+    
+    self.stringLabel.hidden = NO;
+    self.stringLabel.frame = labelRect;
     
     // Animate value update
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     
-	if(string) {
+    if(string) {
         if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeFlat) {
             SVIndefiniteAnimatedView *indefiniteAnimationView = (SVIndefiniteAnimatedView *)self.indefiniteAnimatedView;
-//            indefiniteAnimationView.radius = SVProgressHUDRingRadius;
+            //            indefiniteAnimationView.radius = SVProgressHUDRingRadius;
             [indefiniteAnimationView sizeToFit];
         }
         
@@ -465,10 +471,10 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
         if(self.progress != SVProgressHUDUndefinedProgress){
             self.backgroundRingLayer.position = self.ringLayer.position = CGPointMake((CGRectGetWidth(self.hudView.bounds)/2), 36.0f);
         }
-	} else {
+    } else {
         if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeFlat) {
             SVIndefiniteAnimatedView *indefiniteAnimationView = (SVIndefiniteAnimatedView *)self.indefiniteAnimatedView;
-//            indefiniteAnimationView.radius = SVProgressHUDRingNoTextRadius;
+            //            indefiniteAnimationView.radius = SVProgressHUDRingNoTextRadius;
             [indefiniteAnimationView sizeToFit];
         }
         
@@ -687,7 +693,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     
     CGFloat posX = CGRectGetWidth(orientationFrame)/2.0f;
     CGFloat posY = floorf(activeHeight*0.45f);
-
+    
     CGPoint newCenter;
     CGFloat rotateAngle;
     
@@ -1000,15 +1006,16 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     [skypeSpinner setNumberOfBubbles:5];
     [skypeSpinner setAnimationDuration:1.5f];
     [skypeSpinner setBubbleSize:CGSizeMake(15.0f, 15.0f)];
-    [skypeSpinner setBubbleColor:self.foregroundColor];
-
+    [skypeSpinner setBubbleColor:self.foregroundColorForStyle];
+    [skypeSpinner setBubbleBorderColor:SVProgressHUDBorderColor];
+    
     return skypeSpinner;
-//    SVIndefiniteAnimatedView *indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
-//    indefiniteAnimatedView.strokeColor = self.foregroundColorForStyle;
-//    indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
-//    indefiniteAnimatedView.strokeThickness = SVProgressHUDRingThickness;
-//    [indefiniteAnimatedView sizeToFit];
-//    return indefiniteAnimatedView;
+    //    SVIndefiniteAnimatedView *indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
+    //    indefiniteAnimatedView.strokeColor = self.foregroundColorForStyle;
+    //    indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
+    //    indefiniteAnimatedView.strokeThickness = SVProgressHUDRingThickness;
+    //    [indefiniteAnimatedView sizeToFit];
+    //    return indefiniteAnimatedView;
 }
 
 - (UIView *)indefiniteAnimatedView{
