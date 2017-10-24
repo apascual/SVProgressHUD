@@ -448,7 +448,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     if(string){
         self.imageView.center = CGPointMake(CGRectGetWidth(self.hudView.bounds)/2, 36.0f);
     } else{
-       	self.imageView.center = CGPointMake(CGRectGetWidth(self.hudView.bounds)/2, CGRectGetHeight(self.hudView.bounds)/2);
+        self.imageView.center = CGPointMake(CGRectGetWidth(self.hudView.bounds)/2, CGRectGetHeight(self.hudView.bounds)/2);
     }
     
     self.stringLabel.hidden = NO;
@@ -1001,7 +1001,7 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     return activityIndicatorView;
 }
 
-- (SVIndefiniteAnimatedView *)createIndefiniteAnimatedView{
+- (SVIndefiniteAnimatedView *)createIndefiniteSkypeAnimatedView {
     SCSkypeActivityIndicatorView *skypeSpinner = [[SCSkypeActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     [skypeSpinner setNumberOfBubbles:5];
     [skypeSpinner setAnimationDuration:1.5f];
@@ -1010,17 +1010,30 @@ static const CGFloat SVProgressHUDUndefinedProgress = -1;
     [skypeSpinner setBubbleBorderColor:SVProgressHUDBorderColor];
     
     return skypeSpinner;
-    //    SVIndefiniteAnimatedView *indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
-    //    indefiniteAnimatedView.strokeColor = self.foregroundColorForStyle;
-    //    indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
-    //    indefiniteAnimatedView.strokeThickness = SVProgressHUDRingThickness;
-    //    [indefiniteAnimatedView sizeToFit];
-    //    return indefiniteAnimatedView;
+}
+
+- (SVIndefiniteAnimatedView *)createIndefiniteAnimatedView {
+    SVIndefiniteAnimatedView *indefiniteAnimatedView = [[SVIndefiniteAnimatedView alloc] initWithFrame:CGRectZero];
+    indefiniteAnimatedView.strokeColor = self.foregroundColorForStyle;
+    indefiniteAnimatedView.radius = self.stringLabel.text ? SVProgressHUDRingRadius : SVProgressHUDRingNoTextRadius;
+    indefiniteAnimatedView.strokeThickness = SVProgressHUDRingThickness;
+    [indefiniteAnimatedView sizeToFit];
+    return indefiniteAnimatedView;
 }
 
 - (UIView *)indefiniteAnimatedView{
     if(_indefiniteAnimatedView == nil){
-        _indefiniteAnimatedView = (SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeFlat) ? [self createIndefiniteAnimatedView] : [self createActivityIndicatorView];
+        
+        if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeFlat) {
+            _indefiniteAnimatedView = [self createIndefiniteAnimatedView];
+        }
+        else if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeNative) {
+            _indefiniteAnimatedView = [self createActivityIndicatorView];
+        }
+        else if(SVProgressHUDDefaultAnimationType == SVProgressHUDAnimationTypeSkype) {
+            _indefiniteAnimatedView = [self createIndefiniteSkypeAnimatedView];
+        }
+        
     }
     return _indefiniteAnimatedView;
 }
